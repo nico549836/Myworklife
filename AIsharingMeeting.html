@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI赋能工作效率</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 120px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* 封面页 */
+        .slide-cover {
+            text-align: center;
+        }
+        
+        .slide-cover .icon {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 60px;
+            opacity: 0.9;
+        }
+        
+        .slide-cover h1 {
+            font-size: 72px;
+            font-weight: 600;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        
+        .slide-cover .subtitle {
+            font-size: 24px;
+            color: #888;
+            font-weight: 400;
+            letter-spacing: 4px;
+            margin-bottom: 80px;
+        }
+        
+        .slide-cover .author {
+            font-size: 16px;
+            color: #666;
+            font-weight: 300;
+        }
+        
+        /* 目录页 */
+        .slide-toc h2 {
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+        
+        .toc-list {
+            list-style: none;
+            text-align: center;
+        }
+        
+        .toc-list li {
+            font-size: 32px;
+            color: #ccc;
+            margin-bottom: 40px;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+        
+        .toc-list li span {
+            color: #666;
+            margin-right: 20px;
+        }
+        
+        /* 内容页通用 */
+        .slide-content {
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        .slide-content h2 {
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 60px;
+            text-align: center;
+            letter-spacing: -1px;
+        }
+        
+        .slide-content h3 {
+            font-size: 36px;
+            font-weight: 500;
+            margin-bottom: 40px;
+            color: #ddd;
+            text-align: center;
+        }
+        
+        /* 流程展示 */
+        .flow-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .flow-item {
+            font-size: 22px;
+            color: #fff;
+            padding: 20px 32px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            font-weight: 400;
+        }
+        
+        .flow-arrow {
+            font-size: 24px;
+            color: #555;
+        }
+        
+        /* 核心内容区 */
+        .content-box {
+            background: #111;
+            border-radius: 16px;
+            padding: 48px 60px;
+            margin-top: 40px;
+        }
+        
+        .content-box p {
+            font-size: 24px;
+            line-height: 1.8;
+            color: #ccc;
+            font-weight: 300;
+        }
+        
+        /* 流程图 */
+        .process-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .process-box {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 40px 48px;
+            text-align: center;
+            min-width: 200px;
+        }
+        
+        .process-box h4 {
+            font-size: 20px;
+            color: #888;
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+        
+        .process-box p {
+            font-size: 24px;
+            color: #fff;
+            font-weight: 500;
+        }
+        
+        .arrow-right {
+            font-size: 32px;
+            color: #444;
+        }
+        
+        /* 痛点解决方案 */
+        .pain-solution {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            margin-top: 60px;
+        }
+        
+        .pain-box, .solution-box {
+            flex: 1;
+            max-width: 400px;
+            padding: 48px;
+            border-radius: 16px;
+        }
+        
+        .pain-box {
+            background: #1a1a1a;
+            border: 1px solid #333;
+        }
+        
+        .pain-box h4 {
+            font-size: 20px;
+            color: #888;
+            margin-bottom: 24px;
+            text-decoration: line-through;
+        }
+        
+        .pain-box ul {
+            list-style: none;
+        }
+        
+        .pain-box li {
+            font-size: 22px;
+            color: #666;
+            margin-bottom: 16px;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .pain-box li::before {
+            content: "×";
+            position: absolute;
+            left: 0;
+            color: #555;
+        }
+        
+        .solution-box {
+            background: #fff;
+        }
+        
+        .solution-box h4 {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+        
+        .solution-box ul {
+            list-style: none;
+        }
+        
+        .solution-box li {
+            font-size: 22px;
+            color: #000;
+            margin-bottom: 16px;
+            padding-left: 32px;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        .solution-box li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #000;
+            font-weight: 600;
+        }
+        
+        /* 步骤展示 */
+        .steps-container {
+            margin-top: 60px;
+        }
+        
+        .step-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 32px;
+            justify-content: center;
+        }
+        
+        .step-number {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 24px;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            font-size: 24px;
+            color: #ccc;
+            font-weight: 300;
+        }
+        
+        /* 单段落描述 */
+        .desc-center {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .desc-center p {
+            font-size: 26px;
+            line-height: 1.9;
+            color: #aaa;
+            font-weight: 300;
+        }
+        
+        /* 图标 */
+        .icon-large {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 40px;
+            opacity: 0.6;
+        }
+        
+        /* 结尾页 */
+        .slide-end {
+            text-align: center;
+        }
+        
+        .slide-end h2 {
+            font-size: 64px;
+            font-weight: 600;
+            margin-bottom: 60px;
+            letter-spacing: -1px;
+        }
+        
+        .slide-end p {
+            font-size: 24px;
+            color: #888;
+            line-height: 1.9;
+            max-width: 700px;
+            margin: 0 auto 80px;
+            font-weight: 300;
+        }
+        
+        .slide-end .thanks {
+            font-size: 18px;
+            color: #555;
+            font-weight: 300;
+        }
+        
+        /* 导航提示 */
+        .nav-hint {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #444;
+            letter-spacing: 2px;
+        }
+        
+        /* 页码 */
+        .page-number {
+            position: fixed;
+            bottom: 40px;
+            right: 60px;
+            font-size: 14px;
+            color: #444;
+        }
+        
+        /* 强调文字 */
+        .highlight {
+            color: #fff;
+            font-weight: 500;
+        }
+        
+        /* 非AI处理的节点 */
+        .flow-item-manual {
+            font-size: 22px;
+            color: #888;
+            padding: 20px 32px;
+            background: transparent;
+            border: 1px solid #444;
+            border-radius: 12px;
+            font-weight: 400;
+        }
+        
+        /* 空白预留区 */
+        .placeholder {
+            margin-top: 60px;
+            padding: 60px;
+            border: 1px dashed #333;
+            border-radius: 16px;
+            text-align: center;
+            color: #444;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 第1页：封面页 -->
+    <div class="slide slide-cover active" id="slide-1">
+        <svg class="icon" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="1.5">
+            <circle cx="50" cy="50" r="35"/>
+            <circle cx="50" cy="50" r="20"/>
+            <circle cx="50" cy="50" r="8" fill="#fff"/>
+            <line x1="50" y1="15" x2="50" y2="25"/>
+            <line x1="50" y1="75" x2="50" y2="85"/>
+            <line x1="15" y1="50" x2="25" y2="50"/>
+            <line x1="75" y1="50" x2="85" y2="50"/>
+        </svg>
+        <h1>AI赋能工作效率</h1>
+        <p class="subtitle">原型 · 表格 · 小程序实战</p>
+        <p class="author">极简高效 · 直击核心</p>
+    </div>
+    
+    <!-- 第2页：目录页 -->
+    <div class="slide slide-toc" id="slide-2">
+        <h2>目录</h2>
+        <ul class="toc-list">
+            <li><span>01</span>原型相关</li>
+            <li><span>02</span>ChatExcel</li>
+            <li><span>03</span>AI开发便利工作工具</li>
+        </ul>
+    </div>
+    
+    <!-- 第3页：原型相关 - 全流程 -->
+    <div class="slide" id="slide-3">
+        <div class="slide-content">
+            <h2>原型相关</h2>
+            <h3>AI驱动从想法到团队落地全流程</h3>
+            <div class="flow-container">
+                <div class="flow-item-manual">想法</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-item">需求整理</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-item">AI生成提示词</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-item">工具出原型</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-item-manual">源码部署</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-item">团队分享</div>
+            </div>
+            <div class="content-box" style="text-align: center; margin-top: 60px;">
+                <p><span style="color:#888; border-bottom: 1px dashed #666;">虚线框</span> 为人工处理环节 · <span class="highlight">AI驱动</span> · 极简高效</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 第4页：需求整理与AI提示词生成 -->
+    <div class="slide" id="slide-4">
+        <div class="slide-content">
+            <h2>需求整理与AI提示词生成</h2>
+            <div class="process-flow">
+                <div class="process-box">
+                    <h4>STEP 1</h4>
+                    <p>梳理自身需求</p>
+                </div>
+                <span class="arrow-right">→</span>
+                <div class="process-box">
+                    <h4>STEP 2</h4>
+                    <p>提交至AI工具</p>
+                </div>
+                <span class="arrow-right">→</span>
+                <div class="process-box">
+                    <h4>STEP 3</h4>
+                    <p>AI整理需求</p>
+                </div>
+                <span class="arrow-right">→</span>
+                <div class="process-box">
+                    <h4>STEP 4</h4>
+                    <p>生成提示词</p>
+                </div>
+            </div>
+            <div class="content-box">
+                <p style="text-align: center;">将需求提交至 <span class="highlight">DeepSeek</span>、<span class="highlight">豆包</span> 等AI工具<br>让AI整理需求并反问边界值情况<br>完善后生成可直接用于原型创作的AI提示词</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 第5页：原型生成与核心问题解决 -->
+    <div class="slide" id="slide-5">
+        <div class="slide-content">
+            <h2>原型生成与核心问题解决</h2>
+            <div class="content-box" style="text-align: center; margin-bottom: 40px;">
+                <p>将提示词提交至 <span class="highlight">扣子</span>、<span class="highlight">Trea</span> 等编程工具生成静态原型</p>
+            </div>
+            <div class="pain-solution">
+                <div class="pain-box">
+                    <h4>核心痛点</h4>
+                    <ul>
+                        <li>Axure无法直接打开工具生成的链接</li>
+                        <li>本地部署无法给到团队协作</li>
+                        <li>分享链接困难</li>
+                    </ul>
+                </div>
+                <div class="solution-box">
+                    <h4>解决方案</h4>
+                    <ul>
+                        <li>让AI导出源码</li>
+                        <li>部署至GitHub</li>
+                        <li>生成可访问链接</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 第6页：团队分享落地 -->
+    <div class="slide" id="slide-6">
+        <div class="slide-content">
+            <h2>团队分享落地</h2>
+            <div class="steps-container">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-text">部署至GitHub</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-text">获取部署后的链接</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-text">在Axure中插入内联框架，嵌入链接</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-text">快速分享给开发团队，实现高效协同</div>
+                </div>
+            </div>
+            <div class="content-box" style="text-align: center; margin-top: 60px;">
+                <p>四步完成 · <span class="highlight">便捷高效</span> · 团队协同</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 第7页：ChatExcel -->
+    <div class="slide" id="slide-7">
+        <div class="slide-content">
+            <h2>ChatExcel</h2>
+            <h3>AI赋能表格高效操作</h3>
+            <div class="desc-center">
+                <svg class="icon-large" viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="1.5">
+                    <rect x="10" y="10" width="60" height="60" rx="4"/>
+                    <line x1="10" y1="30" x2="70" y2="30"/>
+                    <line x1="10" y1="50" x2="70" y2="50"/>
+                    <line x1="30" y1="10" x2="30" y2="70"/>
+                    <line x1="50" y1="10" x2="50" y2="70"/>
+                </svg>
+                <p>无需复杂操作，通过AI指令快速处理表格数据<br>提升表格工作效率，简化数据整理流程<br><span class="highlight">聚焦高效 · 便捷 · 贴合工作场景</span></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 第8页：AI开发便利工作工具 -->
+    <div class="slide" id="slide-8">
+        <div class="slide-content">
+            <h2>AI开发便利工作工具</h2>
+            <h3>极简工具赋能工作便捷性</h3>
+            <div class="desc-center">
+                <svg class="icon-large" viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="1.5">
+                    <rect x="15" y="10" width="50" height="60" rx="6"/>
+                    <circle cx="40" cy="58" r="6"/>
+                    <line x1="25" y1="22" x2="55" y2="22"/>
+                    <line x1="25" y1="32" x2="55" y2="32"/>
+                    <line x1="25" y1="42" x2="45" y2="42"/>
+                </svg>
+                <p>利用AI快速开发简易小程序、脚本等工具<br>适配自身工作场景，简化重复工作<br><span class="highlight">提升工作效率</span></p>
+            </div>
+            <div class="placeholder">
+                预留展示区域
+            </div>
+        </div>
+    </div>
+    
+    <!-- 第9页：结尾页 -->
+    <div class="slide slide-end" id="slide-9">
+        <h2>AI赋能 · 高效前行</h2>
+        <p>聚焦核心需求<br>用AI简化工作流程<br>实现高效协同与个人工作升级</p>
+        <p class="thanks">Thank You</p>
+    </div>
+    
+    <!-- 导航提示 -->
+    <div class="nav-hint">← → 键切换页面</div>
+    
+    <!-- 页码 -->
+    <div class="page-number"><span id="current">1</span> / 9</div>
+    
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 9;
+        
+        function showSlide(n) {
+            if (n < 1) n = 1;
+            if (n > totalSlides) n = totalSlides;
+            
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${n}`).classList.add('active');
+            document.getElementById('current').textContent = n;
+            currentSlide = n;
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                showSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft') {
+                showSlide(currentSlide - 1);
+            }
+        });
+        
+        // 点击切换
+        document.addEventListener('click', (e) => {
+            const x = e.clientX;
+            const width = window.innerWidth;
+            if (x > width * 0.6) {
+                showSlide(currentSlide + 1);
+            } else if (x < width * 0.4) {
+                showSlide(currentSlide - 1);
+            }
+        });
+    </script>
+</body>
+</html>
